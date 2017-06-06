@@ -7,15 +7,24 @@ import java.util.ArrayList;
 import java.io.BufferedReader;
 
 class StringMatcher {
-	public String getString (String line, String pattern) {
+	private String _getString (String line, String pattern, int group) {
 		try{
-			Pattern idPattern = Pattern.compile(pattern);
-			Matcher mId = idPattern.matcher(line);
-			if(mId.find()){
-				return mId.group(1);
+			Pattern thisPattern = Pattern.compile(pattern);
+			Matcher thisM = thisPattern.matcher(line);
+			if(thisM.find()){
+				return thisM.group(group);
 			}
 		}catch(Exception e){
 		}
 		return "";
 	}
+
+	public String getString (String line, String pattern) {
+		return this._getString(line, pattern, 1);
+	}
+
+	public String getString (String line, String pattern, int group) {
+		return this._getString(line, pattern, group);
+	}
+
 }

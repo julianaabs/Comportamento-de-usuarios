@@ -13,18 +13,36 @@ public class Csv{
 	public static void main(String [] args) throws Exception{
 		BufferedReader fileLine = new BufferedReader(new FileReader("/home/juliana/Documents/UFRN/2017.1/LP II/InsiderThreat/device.csv"));
 		ArrayList<String> arrayLine = new ArrayList<String>();
-		ArrayList<String> contentLine = new ArrayList<String>();
 		String line = null;
 		StringMatcher sM = new StringMatcher();
 
 		while((line = fileLine.readLine()) !=null){
 			arrayLine.add(fileLine.readLine());
 		}
-		for(int i = 0; i < arrayLine.size(); i++){
-			System.out.println(arrayLine.get(i));
-		}
-		for(int i = 0; i < arrayLine.size(); i++){
-			System.out.println(sM.getString(arrayLine.get(i), "\\{(.*?)\\}"));
+		// for(int i = 0; i < arrayLine.size(); i++){
+		// 	System.out.println(arrayLine.get(i));
+		// }
+		for(int i = 0; i < arrayLine.size() -1; i++){
+			String lineStr = arrayLine.get(i); //Linha Completa
+			/*
+				PADRÃO
+			*/
+			String logId = sM.getString(lineStr, "\\{(.*?)\\}"); // id do log
+			String logDate = sM.getString(lineStr, "[0-9]{2}\\/[0-9]{2}\\/[0-9]{4} [0-9]{2}:[0-9]{2}:[0-9]{2}", 0); // data
+			String logUser = sM.getString(lineStr, "\\bDTAA\\/(.*?),", 0); //usuário
+			String logPC = sM.getString(lineStr, "PC-[0-9]{4}", 0); //PC
+
+			String tmpReplace = "{" + logId + "}," + logDate + "," + logUser + logPC + ",";
+			String logActivity = lineStr.replace(tmpReplace, "");
+
+			/*
+				#################################
+			*/
+
+			System.out.println(logActivity.equals("Connect")); // atividade do dispositivo
+
+			// System.out.println(sM.getString(lineStr, "PC-[0-9]+"));
+			// System.out.println(sM.getString(lineStr, "Connect|Disconnect"));
 			// System.out.println(this.stringMatcher(arrayLine.get(i), "\\{(.*?)\\}"));
 
 			//String id = mId.group(1);
